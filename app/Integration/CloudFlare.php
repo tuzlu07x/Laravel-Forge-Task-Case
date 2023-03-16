@@ -3,6 +3,7 @@
 namespace App\Integration;
 
 use App\Integration\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class CloudFlare
 {
@@ -75,8 +76,8 @@ class CloudFlare
             ]);
 
             return $response;
-        } catch (\Exception $e) {
-            return $e->getMessage();
+        } catch (RequestException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents());
         }
     }
 }
