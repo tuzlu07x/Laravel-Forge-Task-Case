@@ -35,7 +35,7 @@ class Client
     public function request(string $method, string $uri, array $options = []): array
     {
         $response = $this->client()->request($method, $uri, $options);
-        $this->handleRequestError($response);
+        //$this->handleRequestError($response);
 
         return json_decode($response->getBody()->getContents(), true);
     }
