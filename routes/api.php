@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/cloudflare', [LaravelForgeController::class, 'cloudflare']);
+Route::post('/forge', [LaravelForgeController::class, 'createForgeSite']);
