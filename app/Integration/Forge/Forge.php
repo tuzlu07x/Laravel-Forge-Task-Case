@@ -6,14 +6,16 @@ use GuzzleHttp\Exception\RequestException;
 
 class Forge
 {
-    protected ?Site $site;
+    protected ?Site $site = null;
+    protected ?SSL $ssl = null;
     protected string $clientId;
     protected string $serverId;
     protected string $apiKey;
 
-    public function __construct(Site $site, string $clientId, string $serverId, string $apiKey)
+    public function __construct(Site $site = null, SSL $ssl = null, string $clientId, string $serverId, string $apiKey)
     {
         $this->site = $site;
+        $this->ssl = $ssl;
         $this->clientId($clientId);
         $this->serverId($serverId);
         $this->apiKey($apiKey);
@@ -39,10 +41,25 @@ class Forge
         return $this->site;
     }
 
+    public function ssl(): SSL
+    {
+        return $this->ssl;
+    }
+
     public function createSite(string $method)
     {
         try {
             $response = $this->site->request($method);
+            return $response;
+        } catch (RequestException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents());
+        }
+    }
+
+    public function createSSL(string $method)
+    {
+        try {
+            $response = $this->ssl->request($method);
             return $response;
         } catch (RequestException $e) {
             return json_decode($e->getResponse()->getBody()->getContents());
