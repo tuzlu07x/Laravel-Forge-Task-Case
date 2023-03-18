@@ -2,35 +2,30 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class TenantRequest extends FormRequest
+class TenantRequest extends ApiRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
-     */
-    public function rules(): array
+    public function commonRules()
     {
         return [
             'cloudflare_id' => 'nullable|exists:cloud_flares,id',
             'username' => 'required|string',
             'site_id' => 'nullable|string',
-            'domain' => 'required|string',
+            'domain' => 'required|string|unique:tenants,domain',
             'aliases' => 'required|array',
             'directory' => 'required|string',
             'status' => 'required|string',
             'deployment_url' => 'nullable|string',
             'type' => 'required|in:sub_domain,domain',
         ];
+    }
+
+    public function updateRules()
+    {
+        return [];
+    }
+
+    public function storeRules()
+    {
+        return [];
     }
 }
