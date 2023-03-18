@@ -7,8 +7,8 @@ use App\Integration\Client;
 class Site
 {
     protected string $phpVersion = 'php82';
+    protected string $serverId;
     protected string $domain;
-    protected string $uri;
     protected string $projectType;
     protected string $directory;
     protected string $username;
@@ -17,21 +17,15 @@ class Site
     protected array $aliases;
     protected bool $isolated;
 
-    public function __construct(string $uri, string $domain, string $protectType, string $directory, string $username, array $aliases, bool $isolated)
+    public function __construct(string $serverId, string $domain, string $protectType, string $directory, string $username, array $aliases, bool $isolated)
     {
-        $this->uri($uri);
+        $this->serverId = $serverId;
         $this->domain($domain);
         $this->projectType($protectType);
         $this->directory($directory);
         $this->username($username);
         $this->aliases($aliases);
         $this->isolated($isolated);
-    }
-
-    public function uri(string $uri): self
-    {
-        $this->uri = $uri;
-        return $this;
     }
 
     public function domain(string $domain): self
@@ -96,9 +90,9 @@ class Site
         return new Client($baseUrl);
     }
 
-    public function request(string $method)
+    public function request()
     {
-        $client = $this->client(config('forge.baseUrl'))->request($method, $this->uri, [
+        $client = $this->client(config('forge.baseUrl'))->request('POST', '/api/v1/servers/' . $this->serverId . '/sites', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer ' . config('forge.apiKey'),

@@ -38,7 +38,7 @@ class Client
             $response = $this->client()->request($method, $uri, $options);
             return json_decode($response->getBody()->getContents(), true);
         } catch (RequestException $e) {
-            return json_decode($e->getResponse()->getBody()->getContents());
+            throw new \Exception($e->getMessage());
         }
     }
 }

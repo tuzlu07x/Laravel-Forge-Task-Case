@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cloudflare_id')->nullable()->constrained('cloud_flares');
+            $table->string('site_id')->nullable();
             $table->string('project_name');
             $table->string('domain');
             $table->json('subdomain')->nullable();

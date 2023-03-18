@@ -13,12 +13,11 @@ class CloudFlare
     protected string $domain;
     protected string $accountID;
 
-    public function __construct(string $url, string $email, string $apiKey, string $domain, string $accountID)
+    public function __construct(string $url, string $email, string $apiKey, string $accountID)
     {
         $this->url($url);
         $this->email($email);
         $this->apiKey($apiKey);
-        $this->domain($domain);
         $this->accountID($accountID);
     }
 
@@ -46,53 +45,47 @@ class CloudFlare
         return $this;
     }
 
-    public function domain(string $domain): self
-    {
-        $this->domain = $domain;
-        return $this;
-    }
-
     public function accountID(string $accountID): self
     {
         $this->accountID = $accountID;
         return $this;
     }
 
-    public function createSite()
+    public function createSite(string $domain)
     {
-        if ($this->isDomainOrSubDomain() === true) {
-            return response()->json([
-                'success' => false,
-            ], 400);
-        }
-
-        try {
-            $response = $this->client()->request('POST', 'client/v4/zones', [
-                'headers' => [
-                    'X-Auth-Email' => $this->email,
-                    'X-Auth-Key' => $this->apiKey,
-                    'Content-Type' => 'application/json',
+        $response = $this->client()->request('POST', 'client/v4/zones', [
+            'headers' => [
+                'X-Auth-Email' => $this->email,
+                'X-Auth-Key' => $this->apiKey,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'name' => $domain,
+                'account' => [
+                    'id' => $this->accountID,
                 ],
-                'json' => [
-                    'name' => $this->domain,
-                    'account' => [
-                        'id' => $this->accountID,
-                    ],
-                ],
-            ]);
+            ],
+        ]);
 
-            return $response;
-        } catch (RequestException $e) {
-            return json_decode($e->getResponse()->getBody()->getContents());
-        }
+        return $response;
     }
 
-    public function isDomainOrSubDomain(): bool
+    public function createSubdomain(string $domain, string $subdomain)
     {
-        $domain = explode('.', $this->domain);
-        if (count($domain) > 2) {
-            return true;
-        }
-        return false;
+        $response = $this->client()->request('POST', 'client/v4/zones/{$zoneId}/dns_records', [
+            'headers' => [
+                'Authorization' => "Bearer {$this->apiKey}",
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'type' => 'A',
+                'name' => "{$subdomain}.{$domain}",
+                'content' => request()->header('True-Client-IP'),
+                'ttl' => 1,
+                'proxied' => true,
+            ],
+        ]);
+
+        return $response;
     }
 }

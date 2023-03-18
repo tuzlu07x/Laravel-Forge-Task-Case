@@ -46,15 +46,15 @@ class Forge
         return $this->ssl;
     }
 
-    public function createSite(string $method)
+    public function createSite()
     {
-        $response = $this->site->request($method);
+        $response = $this->site->request();
         return $response;
     }
 
-    public function createSSL(string $method)
+    public function createSSL(string $domain)
     {
-        $response = $this->ssl->request($method);
+        $response = $this->ssl->request($domain);
         return $response;
     }
 }

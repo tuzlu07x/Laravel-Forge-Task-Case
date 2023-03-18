@@ -21,5 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/tenant', [LaravelForgeController::class, 'createTenant']);
 Route::post('/cloudflare', [LaravelForgeController::class, 'cloudflare']);
+Route::post('/site/{tenant}', [LaravelForgeController::class, 'createSite']);
 Route::post('/forge', [LaravelForgeController::class, 'createForgeSite']);
 Route::post('/ssl', [LaravelForgeController::class, 'createForgeSSL']);
