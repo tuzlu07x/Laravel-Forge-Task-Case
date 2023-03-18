@@ -21,7 +21,6 @@ return new class extends Migration
 
             $table->boolean('success');
 
-            $table->timestamp('created_on');
             $table->timestamps();
             $table->softDeletes();
         });
