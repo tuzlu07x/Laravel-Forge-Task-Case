@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignId('cloudflare_id')->nullable()->constrained('cloud_flares');
             $table->string('username');
-            $table->string('site_id');
+            $table->string('site_id')->nullable();
             $table->string('domain');
             $table->json('aliases');
             $table->string('directory');
-            $table->string('status');
-            $table->string('deployment_url');
+            $table->string('status')->default('pending');
+            $table->string('deployment_url')->nullable();
 
             $table->enum('type', ['sub_domain', 'domain'])->default('domain');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
