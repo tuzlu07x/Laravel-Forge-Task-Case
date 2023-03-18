@@ -14,6 +14,7 @@ class TenantRequest extends ApiRequest
             'aliases' => 'required|array',
             'directory' => 'required|string',
             'status' => 'required|string',
+            'project_type' => 'required|string',
             'deployment_url' => 'nullable|string',
             'type' => 'required|in:sub_domain,domain',
         ];
