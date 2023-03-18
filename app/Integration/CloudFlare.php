@@ -70,7 +70,7 @@ class CloudFlare
         return $response;
     }
 
-    public function createSubdomain(string $domain, string $subdomain)
+    public function createSubdomain(string $domain, string $subdomain, string $ip)
     {
         $response = $this->client()->request('POST', 'client/v4/zones/{$zoneId}/dns_records', [
             'headers' => [
@@ -80,7 +80,7 @@ class CloudFlare
             'json' => [
                 'type' => 'A',
                 'name' => "{$subdomain}.{$domain}",
-                'content' => request()->header('True-Client-IP'),
+                'content' => $ip,
                 'ttl' => 1,
                 'proxied' => true,
             ],

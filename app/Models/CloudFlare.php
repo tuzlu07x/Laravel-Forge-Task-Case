@@ -18,22 +18,4 @@ class CloudFlare extends Model
     {
         return $this->hasOne(Tenant::class);
     }
-
-    public function createCloudFlare(): CloudFlareClass
-    {
-        $classCloudFlare = new CloudFlareClass(config('cloudflare.url'), config('cloudflare.email'), config('cloudflare.apiKey'), $this->domain, config('cloudflare.accountId'));
-
-        $data = $classCloudFlare->createSite();
-        if (!isset($data->errors)) {
-            $cloud = CloudFlare::create([
-                'domain' => $data['result']['name'],
-                'status' => $data['result']['status'],
-                'name_servers' => $data['result']['name_servers'],
-                'success' => $data['success'],
-            ]);
-            return $cloud;
-        }
-
-        return response()->json($data->errors, 200);
-    }
 }
