@@ -48,21 +48,13 @@ class Forge
 
     public function createSite(string $method)
     {
-        try {
-            $response = $this->site->request($method);
-            return $response;
-        } catch (RequestException $e) {
-            return json_decode($e->getResponse()->getBody()->getContents());
-        }
+        $response = $this->site->request($method);
+        return $response;
     }
 
     public function createSSL(string $method)
     {
-        try {
-            $response = $this->ssl->request($method);
-            return $response;
-        } catch (RequestException $e) {
-            return json_decode($e->getResponse()->getBody()->getContents());
-        }
+        $response = $this->ssl->request($method);
+        return $response;
     }
 }

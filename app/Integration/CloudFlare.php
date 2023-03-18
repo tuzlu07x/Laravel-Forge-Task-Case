@@ -60,6 +60,12 @@ class CloudFlare
 
     public function createSite()
     {
+        if ($this->isDomainOrSubDomain() === true) {
+            return response()->json([
+                'success' => false,
+            ], 400);
+        }
+
         try {
             $response = $this->client()->request('POST', 'client/v4/zones', [
                 'headers' => [
@@ -79,5 +85,14 @@ class CloudFlare
         } catch (RequestException $e) {
             return json_decode($e->getResponse()->getBody()->getContents());
         }
+    }
+
+    public function isDomainOrSubDomain(): bool
+    {
+        $domain = explode('.', $this->domain);
+        if (count($domain) > 2) {
+            return true;
+        }
+        return false;
     }
 }
