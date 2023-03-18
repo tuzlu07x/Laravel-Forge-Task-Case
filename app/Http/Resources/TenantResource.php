@@ -16,17 +16,10 @@ class TenantResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'username' => $this->username,
-            'site_id' => $this->site_id,
+            'project_name' => $this->username,
             'domain' => $this->domain,
-            'aliases' => $this->aliases,
-            'directory' => $this->directory,
-            'status' => $this->status,
-            'deployment_url' => $this->deployment_url,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'subdomain' => $this->aliases,
             'cloudflare' => CloudFlareResource::make($this->whenLoaded('cloudflare')),
-
         ];
     }
 }

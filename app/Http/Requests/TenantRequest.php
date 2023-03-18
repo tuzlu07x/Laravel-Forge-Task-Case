@@ -7,16 +7,9 @@ class TenantRequest extends ApiRequest
     public function commonRules()
     {
         return [
-            'cloudflare_id' => 'nullable|exists:cloud_flares,id',
-            'username' => 'required|string',
-            'site_id' => 'nullable|string',
+            'project_name' => 'required|string',
             'domain' => 'required|string|unique:tenants,domain',
-            'aliases' => 'required|array',
-            'directory' => 'required|string',
-            'status' => 'required|string',
-            'project_type' => 'required|string',
-            'deployment_url' => 'nullable|string',
-            'type' => 'required|in:sub_domain,domain',
+            'subdomain' => 'nullable|string',
         ];
     }
 

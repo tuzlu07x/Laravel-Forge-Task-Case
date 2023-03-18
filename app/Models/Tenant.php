@@ -14,10 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Tenant extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['cloudflare_id', 'username', 'site_id', 'domain', 'aliases', 'directory', 'status', 'deployment_url', 'project_type'];
-    protected $casts = [
-        'aliases' => 'array',
-    ];
+    protected $fillable = ['cloudflare_id', 'project_name', 'domain', 'subdomain'];
 
     public function cloudflare(): BelongsTo
     {
