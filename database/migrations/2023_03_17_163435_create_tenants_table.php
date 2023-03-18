@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('domain');
             $table->json('aliases');
             $table->string('directory');
+            $table->string('project_type')->default('php');
             $table->string('status')->default('pending');
             $table->string('deployment_url')->nullable();
 
