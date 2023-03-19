@@ -57,4 +57,10 @@ class Forge
         $response = $this->ssl->request($domain);
         return $response;
     }
+
+    public function listSSL()
+    {
+        $response = $this->ssl->getSsl();
+        return $response;
+    }
 }

@@ -96,4 +96,17 @@ class SSL
 
         return $client;
     }
+
+
+    public function getSsl()
+    {
+        $client = $this->client(config('forge.baseUrl'))->request('GET', '/api/v1/servers/' . $this->serverId . '/sites/' . $this->siteId . '/certificates', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . config('forge.apiKey'),
+            ],
+        ]);
+
+        return $client;
+    }
 }
