@@ -42,7 +42,7 @@ class CloudFlareJob implements ShouldQueue
         if ($this->counter === 3)
             $this->sendMail();
 
-        LaravelForgeJob::dispatch($this->tenant, $this->counter);
+        LaravelForgeJob::dispatch($this->tenant, 0);
     }
 
     public function isSuccess(array $data): void
