@@ -19,6 +19,21 @@ Route::post('/tenant', [LaravelForgeController::class, 'createTenant']);
     "subdomain":null
 }
 ```
+# .env
+```
+# LARAVAL FORGE
+FORGE_CLIENT_ID=
+FORGE_SERVER_ID=
+FORGE_SERVER_IP="123.123.123.123"
+FORGE_API_KEY=
+FORGE_BASE_URL="https://forge.laravel.com/api/v1",
+
+# CLOUDFLARE
+CLOUDFLARE_URL=https://api.cloudflare.com/
+CLOUDFLARE_EMAIL=
+CLOUDFLARE_API_KEY=
+CLOUDFLARE_ACCOUNT_ID=
+```
 
 Then, the observer in the system will be triggered, and the request will be made through the domain in the table.
 
