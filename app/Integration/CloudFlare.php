@@ -70,18 +70,19 @@ class CloudFlare
         return $response;
     }
 
-    public function createSubdomain(string $domain, string $subdomain, string $ip)
+    public function createSubdomain(string $domain, string $subdomain, string $ip, string $zoneId)
     {
-        $response = $this->client()->request('POST', 'client/v4/zones/{$zoneId}/dns_records', [
+        $response = $this->client()->request('POST', 'client/v4/zones/' . $zoneId . '/dns_records', [
             'headers' => [
-                'Authorization' => "Bearer {$this->apiKey}",
+                'X-Auth-Email' => $this->email,
+                'X-Auth-Key' => $this->apiKey,
                 'Content-Type' => 'application/json',
             ],
             'json' => [
                 'type' => 'A',
                 'name' => "{$subdomain}.{$domain}",
                 'content' => $ip,
-                'ttl' => 1,
+                'ttl' => 120,
                 'proxied' => true,
             ],
         ]);
