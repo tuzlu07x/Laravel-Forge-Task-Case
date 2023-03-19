@@ -17,7 +17,7 @@ class SSLCreationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected Tenant $tenant;
-    protected $counter = 0;
+    protected $counter;
 
     /**
      * Create a new job instance.
@@ -43,13 +43,15 @@ class SSLCreationJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->hasSSL();
-        if ($this->counter === 3) {
+        if ($this->counter === 3 || $this->tenant->site_id === null) {
             $this->sendMail();
+            return;
         }
+        $this->hasSSL();
         if ($this->tenant->ssl_status === 'success') {
             $this->sendMail();
         }
+        return;
     }
 
     public function createSll()
@@ -57,6 +59,7 @@ class SSLCreationJob implements ShouldQueue
         $ssl = $this->ssl();
         $forge = $this->laravelForgeSSL($ssl);
 
+        $this->tenant->update(['ssl_status' => 'success']);
         return $forge->createSSL($this->tenant->domain);
     }
 
@@ -71,25 +74,20 @@ class SSLCreationJob implements ShouldQueue
     public function hasSSL(): void
     {
         $ssl = $this->listSSL();
-        collect($ssl['certificates'])->each(function ($item) {
-            if ($item['domain'] != $this->tenant->domain) {
-                $response = $this->createSll();
-                if ($response['certificate']['id'] === $item['id']) {
-                    $this->tenant->update(['ssl_status' => 'success']);
-                    $this->sendMail();
-                } else {
+        if (count($ssl['certificates']) != 0) {
+            collect($ssl['certificates'])->each(function ($item) {
+                if ($item['domain'] == $this->tenant->domain) {
                     $this->tenant->update(['ssl_status' => 'error']);
                     while ($this->counter < 3) {
                         $this->counter++;
-                        self::dispatch($this->tenant, $this->counter)->delay(now()->addSeconds());
+                        self::dispatch($this->tenant, $this->counter)->delay(now()->addSeconds(60));
+                        return;
                     }
                 }
-            }
-            if ($item['domain'] == $this->tenant->domain) {
-                $this->tenant->update(['ssl_status' => 'success']);
-                //$this->sendMail();
-            }
-        });
+            });
+        } else {
+            $this->createSll();
+        }
     }
 
     public function sendMail()

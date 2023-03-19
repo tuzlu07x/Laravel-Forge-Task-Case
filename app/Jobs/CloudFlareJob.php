@@ -43,6 +43,7 @@ class CloudFlareJob implements ShouldQueue
             $this->sendMail();
 
         LaravelForgeJob::dispatch($this->tenant, 0);
+        return;
     }
 
     public function isSuccess(array $data): void
@@ -51,7 +52,7 @@ class CloudFlareJob implements ShouldQueue
             $this->tenant->update(['cloudflare_status' => 'error']);
             while ($this->counter < 3 && $data['success'] == false) {
                 $this->counter++;
-                self::dispatch($this->tenant, $this->counter)->delay(now()->addSeconds());
+                self::dispatch($this->tenant, $this->counter)->delay(now()->addSeconds(60));
             }
         } else {
             $this->tenant->update(['cloudflare_status' => 'success', 'cloudflare_zone_id' => $data['result']['id']]);

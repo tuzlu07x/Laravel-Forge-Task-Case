@@ -33,11 +33,14 @@ class LaravelForgeJob implements ShouldQueue
     public function handle(): void
     {
         $this->createForgeSite();
-        if ($this->counter == 3) {
+        if ($this->counter === 3 && $this->tenant->forge_status != 'success') {
             $this->sendMail();
-            return;
         }
-        SSLCreationJob::dispatch($this->tenant, 0);
+        if ($this->tenant->forge_status === 'success') {
+            $this->sendMail();
+        }
+
+        SSLCreationJob::dispatchSync($this->tenant, 0);
     }
 
     public function createForgeSite()
@@ -61,8 +64,8 @@ class LaravelForgeJob implements ShouldQueue
     public function delayWithCounter(): void
     {
         while ($this->counter < 3) {
-            self::dispatch($this->tenant, $this->counter)->delay(now()->addSeconds());
             $this->counter++;
+            self::dispatch($this->tenant, $this->counter)->delay(now()->addSeconds(60));
         }
     }
 
