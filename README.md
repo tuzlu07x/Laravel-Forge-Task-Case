@@ -7,6 +7,8 @@ There is a table named Tenant, and once this table is created, a job is triggere
 ```
 Route::post('/tenant', [LaravelForgeController::class, 'createTenant']);
 ```
+# Postman Link
+### https://www.postman.com/dark-station-425448/workspace/laravel-forge/collection/20110215-adc663f1-3ed6-44fc-836d-2c88243e9072?action=share&creator=20110215
 
 # Example Response
 
