@@ -4,7 +4,11 @@ This is a Laravel Readme.md file for a project that introduces the system as fol
 
 There is a table named Tenant, and once this table is created, a job is triggered. First, you need to make a request to "/tenant" in the Tenant table.
 
-# Örnek Response
+```
+Route::post('/tenant', [LaravelForgeController::class, 'createTenant']);
+```
+
+# Example Response
 
 ```
 {
