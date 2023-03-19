@@ -37,6 +37,7 @@ class LaravelForgeJob implements ShouldQueue
             $this->sendMail();
             return;
         }
+        SSLCreationJob::dispatch($this->tenant, 0);
     }
 
     public function createForgeSite()
